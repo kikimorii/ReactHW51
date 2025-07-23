@@ -1,33 +1,25 @@
 import styles from './App.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+import { useGetTodos } from './hooks';
 
 const App = () => {
-  const [todos, setTodos] = useState([{
-    "userId": 1,
-    "id": 1,
-    "title": "delectus aut autem",
-    "completed": true
-  },
-  {
-    "userId": 1,
-    "id": 2,
-    "title": "quis ut nam facilis et officia qui",
-    "completed": false
-  },
-  {
-    "userId": 1,
-    "id": 3,
-    "title": "fugiat veniam minus",
-    "completed": true
-  }]);
+  const [todos, setTodos] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  useGetTodos(setTodos, setIsLoading);
 
   return (
     <div className={styles.app}>
-      <ul>
-        {todos.map(({ id, title, completed }) => (
-          <li key={id}>{title} - <span className={completed ? styles.completed : styles.incompleted}>{completed ? 'completed' : 'incompleted'}</span></li>
-        ))}
-      </ul>
+      {isLoading
+        ? <div className={styles.loader}></div>
+        : (
+          <ul className={styles.list}>
+            {todos.map(({ id, title, completed }) => (
+              <li key={id}><span className={completed ? styles.completed : styles.incompleted}>{completed ? 'completed' : 'incompleted'}</span> - {title}</li>
+            ))}
+          </ul>
+        )
+      }
     </div>
   )
 }
